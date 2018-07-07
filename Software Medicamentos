@@ -34,8 +34,7 @@ typedef struct paciente{
         int telefonePaciente;
         char emailPaciente[50];
         CUIDADOR cuidador;
-
-
+        REMEDIO remedio;
         struct paciente *prox;
     }PACIENTE;
 
