@@ -4,8 +4,6 @@
 #include <string.h>
 #include <conio.h>
 #include <locale.h>
-#include <string.h>
-
 
 
 typedef struct cuidador{
@@ -15,14 +13,13 @@ typedef struct cuidador{
     int telefoneCuidador;
 
 
-    }CUIDADOR;
+}CUIDADOR;
 
 typedef struct remedio
 {
-    char nomeRemedio[40];
+    char nome[80], nomeRemedio[40];
     float dose;
     float horario;
-    int codigo;
 
     struct remedio *prox;
 } REMEDIO;
@@ -34,317 +31,121 @@ typedef struct paciente{
         int telefonePaciente;
         char emailPaciente[50];
         CUIDADOR cuidador;
-        REMEDIO remedio;
+
         struct paciente *prox;
-    }PACIENTE;
+}PACIENTE;
 
 
 
 
-    void inserir(PACIENTE **inicio, int escolhaCuidador){
+void inserir(PACIENTE **inicio, int escolhaCuidador){
 
-        PACIENTE *novo;
-        novo = (PACIENTE*)malloc(sizeof(PACIENTE));
-
-
-
-        printf ("\n\nNome do paciente: ");
-        scanf (" %[^\n]",&novo->nomePaciente);
-
-        printf ("Cpf do Paciente: ");
-        scanf (" %d",&novo->cpfPaciente);
-
-        printf ("Telefone Paciente: ");
-        scanf (" %d",&novo->telefonePaciente);
-
-        printf ("Email do Paciente: ");
-        scanf (" %[^\n]",&novo->emailPaciente);
+    PACIENTE *novo;
+    novo = (PACIENTE*)malloc(sizeof(PACIENTE));
 
 
-        if(escolhaCuidador == 1){
-            printf("\nNome do Cuidador: ");
-            scanf (" %[^\n]",&novo->cuidador.nomeCuidador);
 
-            printf("Digite o cpf do cuidador: ");
-            scanf (" %d",&novo->cuidador.cpfCuidador);
+    printf ("Nome do paciente: ");
+    scanf (" %[^\n]",&novo->nomePaciente);
 
-            printf("Digite o telefone do cuidador: ");
-            scanf (" %d",&novo->cuidador.telefoneCuidador);
+    printf ("Cpf do Paciente: ");
+    scanf ("%d",&novo->cpfPaciente);
 
-            printf("Email do Cuidador: ");
-            scanf (" %[^\n]",&novo->cuidador.emailCuidador);
+    printf ("Telefone Paciente: ");
+    scanf ("%d",&novo->telefonePaciente);
+
+    printf ("Email do Paciente: ");
+    scanf (" %[^\n]",&novo->emailPaciente);
 
 
-        }
+    if(escolhaCuidador == 1){
+        printf("\nNome do Cuidador: ");
+        scanf (" %[^\n]",&novo->cuidador.nomeCuidador);
 
-        if(*inicio == NULL){
-            novo->prox = NULL;
-            *inicio = novo;
+        printf("Digite o cpf do cuidador: ");
+        scanf (" %d",&novo->cuidador.cpfCuidador);
 
-        }else{
-            novo->prox = *inicio;
-            *inicio = novo;
+        printf("Digite o telefone do cuidador: ");
+        scanf (" %d",&novo->cuidador.telefoneCuidador);
 
-        }
+        printf("Email do Cuidador: ");
+        scanf (" %[^\n]",&novo->cuidador.emailCuidador);
 
 
     }
 
-    void inserirRemedio(REMEDIO **inicio, int cont){
-        REMEDIO *novo;
-        novo = (REMEDIO*)malloc(sizeof(REMEDIO));
+    printf("\n\t\tPaciente cadastrado com sucesso!\n\n");
 
-        printf ("\n\nNome do remédio: ");
-        scanf (" %[^\n]",&novo->nomeRemedio);
+    if(*inicio == NULL){
+        novo->prox = NULL;
+        *inicio = novo;
 
-        printf ("\n\nInsira a dose do remédio: ");
-        scanf (" %f",&novo->dose);
-
-        printf ("Horário do remédio: ");
-        scanf (" %f",&novo->horario);
-
-        cont = novo->codigo; //Verificar se é com ou sem &
-
-        if(*inicio == NULL){
-            novo->prox = NULL;
-            *inicio = novo;
-
-        }else{
-            novo->prox = *inicio;
-            *inicio = novo;
-
-        }
-
+    }else{
+        novo->prox = *inicio;
+        *inicio = novo;
 
     }
 
 
-    void consultar (PACIENTE *inicio)
+}
+
+void inserirRemedio(REMEDIO **inicio){
+    REMEDIO *novo;
+
+    novo = (REMEDIO*)malloc(sizeof(REMEDIO));
+
+    printf("Digite o nome do paciente: ");
+    scanf(" %[^\n]", &novo->nome);
+
+    printf("\nNome do remédio: ");
+    scanf(" %[^\n]",&novo->nomeRemedio);
+
+    printf("Insira a dose do remédio: ");
+    scanf(" %f",&novo->dose);
+
+    printf("\nHorário do remédio: ");
+    scanf(" %f",&novo->horario);
+
+    printf("\n\tRemédio cadastrado com sucesso!\n\n");
+
+
+    if(*inicio == NULL){
+        novo->prox = NULL;
+        *inicio = novo;
+
+    }else{
+        novo->prox = *inicio;
+        *inicio = novo;
+
+    }
+}
+
+void consultar(PACIENTE *inicio, int escolhaCuidador)
+{
+    PACIENTE *aux;
+    aux = inicio;
+
+
+    char procurado[80];
+
+    printf("Entre com o nome que deseja consultar os dados: ");
+    scanf(" %[^\n]",&procurado);
+
+    if (inicio==NULL)
     {
-        PACIENTE *aux;
-        aux = inicio;
-        int procurado;
-
-        printf ("Entre com o CPF que deseja alterar: ");
-        scanf ("%d",&procurado);
-
-        if (inicio==NULL)
-        {
-            printf ("Realize o cadastro primeiro!");
-        }
-
-        else
-        {
-            printf ("Pacientes cadastrados: \n");
-            aux=inicio;
-            while (aux!=NULL)
-            {
-
-                if (procurado==aux->cpfPaciente)
-                {
-                    printf (" ACHOU");
-
-                }
-            aux=aux->prox;
-
-            }
-        }
+        printf("\n\n\t\t\tRealize o cadastro primeiro!\n\n");
+        main();
     }
 
-    PACIENTE *editar (PACIENTE *inicio,int escolhaCuidador)
+    else
     {
-
-        PACIENTE *aux;
-        aux = inicio;
-        int procurado=0, alterar=0, opcao=0;
-
-
-        printf ("Entre com o CPF do paciente que deseja alterar: ");
-        scanf ("%d",&procurado);
-        printf("Digite 1 para alterar dados do paciente ou 2 para o do cuidador: ");
-        scanf("%d", &alterar);
-
-        if(alterar ==1){
-
-            while (aux!=NULL)
-            {
-
-                if (procurado==aux->cpfPaciente)
-                {
-                    do{
-                        printf("Escolha o que deseja alterar do cuidador: ");
-                        printf ("/n/t");
-                        printf ("1-Nome");
-                        printf ("2-CPF");
-                        printf ("3-Telefone");
-                        printf ("4-Voltar para menu principal");
-                        scanf ("%d",&opcao);
-
-                        switch (opcao){
-                            case 1:
-
-                                printf("Digite o novo nome: ");
-                                scanf(" %[^\n]", &aux->nomePaciente);
-                                printf("Cpf alterado para: %s", aux->nomePaciente);
-
-                            break;
-                            case 2:
-                                printf("Digite o novo cpf: ");
-                                scanf(" %d", &aux->cuidador.cpfCuidador);
-                                printf("Cpf alterado para: %d", aux->cpfPaciente);
-
-                            break;
-                            case 3:
-                                printf("Digite o novo telefone: ");
-                                scanf(" %d", &aux->telefonePaciente);
-                                printf("Cpf alterado para: %d", aux->telefonePaciente);
-
-                            break;
-
-                            case 4:
-                                main();
-                            default:
-                                printf ("Opção inválida");
-                                main();
-                        }
-                    } while (opcao!=4);
-
-
-
-                }
-                aux=aux->prox;
-
-            }
-
-        }else if(alterar==2){
-
-            while (aux!=NULL)
-            {
-
-                if (procurado==aux->cpfPaciente)
-                {
-                    do{
-                        printf("Escolha o que deseja alterar do cuidador: ");
-                        printf ("/n/t");
-                        printf ("1-Nome");
-                        printf ("2-CPF");
-                        printf ("3-Telefone");
-                        printf ("4-Voltar para menu principal");
-                        scanf ("%d",&opcao);
-
-                        switch (opcao){
-                            case 1:
-
-                                printf("Digite o novo nome: ");
-                                scanf(" %[^\n]", &aux->cuidador.nomeCuidador);
-                                printf("Cpf alterado para: %s", aux->cuidador.nomeCuidador);
-
-                                break;
-                            case 2:
-                            printf("Digite o novo cpf: ");
-                            scanf(" %d", &aux->cuidador.cpfCuidador);
-                            printf("Cpf alterado para: %d", aux->cuidador.cpfCuidador);
-
-                            break;
-                        case 3:
-                            printf("Digite o novo telefone: ");
-                            scanf(" %d", &aux->cuidador.telefoneCuidador);
-                            printf("Cpf alterado para: %d", aux->cuidador.telefoneCuidador);
-
-                            break;
-
-                        case 4:
-                            main();
-                        default:
-                            printf ("Opção inválida");
-                            main();
-                        break;
-                        }
-                    } while (opcao!=4);
-
-
-
-                }
-                aux=aux->prox;
-
-            }
-        }
-
-
-
-    return inicio;
-    }
-
-    REMEDIO *editarRemedio (REMEDIO *inicio)
-    {
-       REMEDIO *aux;
-        aux = inicio;
-        char nomeprocurado;
-        int opcao=0;
-
-        printf ("Entre com o CPF que deseja alterar: ");
-        scanf (" %[^\n]",&nomeprocurado);
 
         while (aux!=NULL)
         {
-            if (strcmp(aux->nomeRemedio, nomeprocurado) == 0){
 
-            do
+            if (strcmp(procurado,aux->nomePaciente)==0)
             {
-                printf ("Escolha o dado que deseja alterar: ");
-                printf ("1-Nome: ");
-                printf ("2-Dose: ");
-                printf ("3-Horário: ");
-                printf ("4-Ir para menu principal");
-                scanf ("%d",&opcao);
-
-                switch (opcao)
-                {
-                case 1:
-                    printf("Digite o novo nome do remedio: ");
-                    scanf(" %[^\n]", &aux->nomeRemedio);
-                    printf("Cpf alterado para: %s", aux->nomeRemedio);
-                break;
-                case 2:
-                        printf("Digite a nova dosagem: ");
-                        scanf(" %d", &aux->dose);
-                        printf("Nova dose alterada para: %f", aux->dose);
-
-                break;
-                case 3:
-                    printf("Digite o novo horário: ");
-                    scanf(" %d", &aux->horario);
-                    printf("Nova dose alterada para: %f", aux->horario);
-                break;
-                case 4:
-                    main();
-                default:
-                    printf("Opção inválida!");
-                    main();
-                break;
-                }
-
-            }while (opcao!=4);
-
-        }
-    }
- }
-
-
-
-
-
-
-    void imprimir(PACIENTE *inicio,  int escolhaCuidador){
-
-        PACIENTE *aux;
-        REMEDIO *aux1;
-        aux = inicio;
-
-        if(aux == NULL){
-            printf("Paciente nao cadastrado! ");
-        }else{
-            do{
+                printf (" \n\n\t\tPaciente cadastrado!");
                 printf("\n\nNome do paciente: %s \n", aux->nomePaciente);
                 printf("Cpf do paciente: %d \n", aux->cpfPaciente);
                 printf("Email do paciente: %s \n", aux->emailPaciente);
@@ -358,33 +159,350 @@ typedef struct paciente{
                     printf("Email do cuidador: %s \n", aux->cuidador.emailCuidador);
                     printf("Telefone do cuidador: %d \n\n", aux->cuidador.telefoneCuidador);
                 }
-
-
-                aux = aux->prox;
-            }while(aux != NULL);
+            }
+        aux=aux->prox;
         }
     }
+}
+
+
+PACIENTE *editar (PACIENTE *inicio,int escolhaCuidador)
+{
+
+    PACIENTE *aux;
+    aux = inicio;
+    int alterar=0, opcao=0;
+    char procurado[80];
+
+    printf ("\n\tEntre com o nome do paciente que deseja alterar: ");
+    scanf (" %[^\n]",&procurado);
+    printf("\tDigite 1 para alterar dados do paciente ou 2 para o do cuidador: ");
+    scanf("%d", &alterar);
+
+    if(alterar == 1){
+
+        while (aux!=NULL)
+        {
+
+            if (strcmp(procurado,aux->nomePaciente)==0)
+            {
+                do{
+                    printf("\n\nEscolha o que deseja alterar: ");
+                    printf ("\n");
+                    printf ("1-Nome");
+                    printf ("\n2-CPF");
+                    printf ("\n3-Telefone");
+                    printf ("\n4-Voltar para menu principal: ");
+                    scanf ("%d",&opcao);
+                    switch (opcao){
+                        case 1:
+
+                            printf("Digite o novo nome: ");
+                            scanf(" %[^\n]", &aux->nomePaciente);
+                            printf("\nNome alterado para: %s", aux->nomePaciente);
+
+                        break;
+                        case 2:
+                            printf("Digite o novo cpf: ");
+                            scanf(" %d", &aux->cpfPaciente);
+                            printf("\nCpf alterado para: %d", aux->cpfPaciente);
+
+                        break;
+                        case 3:
+                            printf("Digite o novo telefone: ");
+                            scanf(" %d", &aux->telefonePaciente);
+                            printf("\nTelefone alterado para: %d", aux->telefonePaciente);
+
+                        break;
+
+                        case 4:
+                            main();
+                        default:
+                            printf ("Opção inválida!");
+                            main();
+                    }
+                } while (opcao!=4);
+
+
+            }
+            aux=aux->prox;
+
+        }
 
 
 
+    return inicio;
+    }else if (alterar == 2){
+        while (aux!=NULL)
+        {
 
-    main()
+            if (strcmp(procurado,aux->nomePaciente)==0)
+            {
+                do{
+                    printf("\n\nEscolha o que deseja alterar: ");
+                    printf ("\n");
+                    printf ("1-Nome do cuidador");
+                    printf ("\n2-CPF do cuidador");
+                    printf ("\n3-Telefone do cuidador");
+                    printf ("\n4-Voltar para menu principal: ");
+                    scanf ("%d",&opcao);
+                    switch (opcao){
+                        case 1:
+
+                            printf("Digite o novo nome: ");
+                            scanf(" %[^\n]", &aux->cuidador.nomeCuidador);
+                            printf("\nNome alterado para: %s", aux->cuidador.nomeCuidador);
+
+                        break;
+                        case 2:
+                            printf("Digite o novo cpf: ");
+                            scanf(" %d", &aux->cuidador.cpfCuidador);
+                            printf("\nCpf alterado para: %d", aux->cuidador.cpfCuidador);
+
+                        break;
+                        case 3:
+                            printf("Digite o novo telefone: ");
+                            scanf(" %d", &aux->cuidador.telefoneCuidador);
+                            printf("\nTelefone alterado para: %d", aux->cuidador.telefoneCuidador);
+
+                        break;
+
+                        case 4:
+                            main();
+                        default:
+                            printf("Opção inválida!");
+                            main();
+                    }
+                }while (opcao!=4);
+
+
+            }
+            aux=aux->prox;
+
+        }
+    return inicio;
+    }
+}
+
+REMEDIO *editarRemedio (REMEDIO *inicio){
+    REMEDIO *aux;
+    aux = inicio;
+
+    char procurado[40];
+    int opcao=0;
+
+    printf ("\n\nEntre com o remédio que deseja alterar: ");
+    scanf (" %[^\n]", &procurado);
+
+
+    while (aux!=NULL)
     {
+        if (strcmp(procurado,aux->nomeRemedio)==0)
+        {
+            do{
+                    printf("\n\nEscolha o que deseja alterar: ");
+                    printf ("\n");
+                    printf ("1-Nome do remédio");
+                    printf ("\n2-Dose do remédio");
+                    printf ("\n3-Horário do remédio");
+                    printf ("\n4-Voltar para menu principal: ");
+                    scanf ("%d",&opcao);
+                    switch (opcao){
+                        case 1:
 
-        setlocale (LC_ALL,"Portuguese");
-        int escolhaCuidador = 0;
-        printf ("Existe cuidador? Sim(1), Nao (2): ");
-        scanf ("%d",&escolhaCuidador);
+                            printf("Digite o novo nome do remédio: ");
+                            scanf(" %[^\n]", &aux->nomeRemedio);
+                            printf("Nome alterado para: %s", aux->nomeRemedio);
+                        break;
 
-        PACIENTE *inicio = NULL;
-        int cont = 1;
+                        case 2:
+                            printf("Digite o nova dose do remédio: ");
+                            scanf(" %d", &aux->dose);
+                            printf("Nome alterado para: %s", aux->dose);
+                        break;
+
+                        case 3:
+                            printf("Digite o novo horário do remédio: ");
+                            scanf(" %d", &aux->horario);
+                            printf("Nome alterado para: %s", aux->horario);
+                        break;
+                        default:
+                            printf("\nOpção inválida");
+                            main();
+
+                    }
+            }while(opcao!=4);
+        }
+        aux=aux->prox;
+    }
+    return inicio;
+}
 
 
-        inserir(&inicio, escolhaCuidador);
-        inserirRemedio(&inicio, cont);
-        inicio = editar(inicio, escolhaCuidador);
-        inicio = editarRemedio(inicio);
-        imprimir(inicio, escolhaCuidador);
+
+void imprimir(PACIENTE *inicio, int escolhaCuidador){
+    PACIENTE *aux;
+    aux = inicio;
+
+    if(aux == NULL){
+        printf("\n\nLista vazia! ");
+    }else{
+        do{
+            printf("\n\nNome do paciente: %s \n", aux->nomePaciente);
+            printf("Cpf do paciente: %d \n", aux->cpfPaciente);
+            printf("Email do paciente: %s \n", aux->emailPaciente);
+            printf("Telefone do paciente: %d \n\n", aux->telefonePaciente);
+
+            if(escolhaCuidador == 1){
+                printf("Nome do cuidador: %s \n", aux->cuidador.nomeCuidador);
+                printf("Cpf do cuidador: %d \n", aux->cuidador.cpfCuidador);
+                printf("Email do cuidador: %s \n", aux->cuidador.emailCuidador);
+                printf("Telefone do cuidador: %d \n\n", aux->cuidador.telefoneCuidador);
+            }
+
+            aux = aux -> prox;
+        }while(aux != NULL);
+    }
+
+}
+
+void imprimirRemedio(REMEDIO *inicio1){
+    REMEDIO *aux1;
+    aux1 = inicio1;
 
 
-   }
+        if(aux1 == NULL){
+            printf("Lista vazia! ");
+        }else{
+            do{
+
+                printf("\n\nNome do paciente: %s \n", aux1->nome);
+                printf("Nome do remédio: %s \n", aux1->nomeRemedio);
+                printf("Dosagem: %.2f mg\n", aux1->dose);
+                printf("Horário do remédio: %.2f hs\n", aux1->horario);
+
+
+                aux1 = aux1 -> prox;
+            }while(aux1 != NULL);
+        }
+
+}
+
+
+main()
+{
+
+    setlocale (LC_ALL,"Portuguese");
+    int escolhaCuidador = 0, opcao = 0, alterar=0, relatorio=0;;;
+
+    PACIENTE *inicio = NULL;
+    REMEDIO *inicio1 = NULL;
+
+    do
+    {
+        printf ("\n\t\t");
+        printf ("**Caixa de remédios**\n");
+        printf ("Digite a opção desejada:\n\n\t");
+        printf ("1-Cadastrar um novo paciente\n\t");
+        printf ("2-Cadastrar remédios\n\t");
+        printf ("3-Consultar os dados de um paciente já cadastrado\n\t");
+        printf ("4-Gerenciar remedios e/ou horarios de paciente ja cadastrado\n\t");
+        printf ("5-Relatório de pacientes cadastrados\n\t");
+        printf ("6-Sair\n\n");
+        printf ("Opção desejada --> ");
+        scanf(" %d", &opcao);
+
+        switch (opcao)
+        {
+            case 1:
+
+                printf ("\n\nExiste cuidador? Sim(1), Não (2): ");
+                scanf ("%d",&escolhaCuidador);
+                if(escolhaCuidador==1 || escolhaCuidador==2){
+                    inserir(&inicio, escolhaCuidador);
+
+                }
+                else
+                {
+                    printf("\nOpção inválida!\n\n");
+                    main();
+                }
+
+            break;
+
+            case 2:
+                if(inicio!=NULL)
+                {
+
+                    inserirRemedio(&inicio1);
+                }else
+                {
+                    printf("\nPRIMEIRO CADASTRE UM PACIENTE!\n\n");
+                    main();
+                }
+
+            break;
+
+            case 3:
+                if(inicio!=NULL)
+                {
+                    consultar(inicio, escolhaCuidador);
+                }else
+                {
+                    printf("\nPRIMEIRO CADASTRE UM PACIENTE!\n\n");
+                    main();
+                }
+
+            break;
+
+
+            case 4:
+                if(inicio!=NULL)
+                {
+                    printf("Digite para alterar (1)-Dados do paciente e/ou do cuidador: (2)- Dados dos medicamentos  ");
+                    scanf(" %d", &alterar);
+
+                    if(alterar==2){
+                        inicio1 = editarRemedio(inicio1);
+
+                    }else if(alterar==1){
+                        inicio = editar(inicio, escolhaCuidador);
+
+                    }else{
+                        printf("\n\nOpção inválida!");
+                        main();
+                    }
+
+                }
+                else
+                {
+                    printf("\nPRIMEIRO CADASTRE UM PACIENTE!\n\n");
+                    main();
+                }
+
+                break;
+
+            case 5:
+                printf("\n\n1- Relatório do Paciente. 2- Relatório medicamentos: ");
+                scanf("%d", &relatorio);
+
+                if(relatorio==1){
+                    imprimir(inicio, escolhaCuidador);
+
+
+                }else if(relatorio==2){
+                    imprimirRemedio(inicio1);
+
+                }
+
+            break;
+
+            case 6:
+                exit(0);
+            break;
+
+            default:
+                printf("\n\n\t\t\tOpção inválida!\n\n");
+        }
+    }while(opcao!=6);
+}
